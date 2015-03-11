@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
-import pe.com.gym.entidades_ant.Huella;
+import pe.com.gym.entidades.Huella;
 
 
 @Local

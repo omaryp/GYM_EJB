@@ -1,5 +1,6 @@
 package pe.com.gym.entidades;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class Huella implements Serializable {
 
 	private Date fecreg;
 	
-	private byte[] huecli;
+	private ByteArrayInputStream huecli;
 
 	private String usureg;
 
@@ -64,11 +65,11 @@ public class Huella implements Serializable {
 		this.fecreg = fecreg;
 	}
 
-	public byte[] getHuecli() {
+	public ByteArrayInputStream getHuecli() {
 		return this.huecli;
 	}
 
-	public void setHuecli(byte[] huecli) {
+	public void setHuecli(ByteArrayInputStream huecli) {
 		this.huecli = huecli;
 	}
 

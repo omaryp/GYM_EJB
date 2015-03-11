@@ -18,7 +18,7 @@ import javax.ejb.Stateless;
 import javax.sql.DataSource;
 
 import pe.com.gym.dto.ClienteDTO;
-import pe.com.gym.entidades_ant.Cliente;
+import pe.com.gym.entidades.Cliente;
 
 /**
  * Acceso a datos de Clientes
@@ -44,20 +44,20 @@ public class ClienteDAO implements ClienteDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="INSERT INTO TB_CLIENTE(CODCLI, TELCLI, DIRCLI, TIPPER, RAZSOC, RUCCLI, USUREG, REPLEG, DNIREPL,FECREG)  "+
+			cadSql="INSERT INTO TB_CLIENTE(CODCLI, TELEF1, DIRCLI, TIPPER, RAZSOC, RUCCLI, USUREG, REPLEG, DNIREPL,FECREG)  "+
 					"VALUES (?,?,?,?,?,?,?,?,?,?)";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setLong(1, cli.getCodigoCliente());
-			ps.setString(2, cli.getTelefonoCliente());
-			ps.setString(3, cli.getDireccionCliente());
-			ps.setString(4, cli.getTipoPersona());
-			ps.setString(5, cli.getRazonSocial());
-			ps.setString(6, cli.getRucCliente());
-			ps.setString(7, cli.getUsuarioRegistro());
-			ps.setString(8, cli.getRepLegal());
-			ps.setString(9, cli.getDniRepLegal());
-			ps.setDate(10,(Date) cli.getFechaRegistro());
+			ps.setLong(1, cli.getCodcli());
+			ps.setString(2, cli.getTelef1());
+			ps.setString(3, cli.getDircli());
+			ps.setString(4, cli.getTipper());
+			ps.setString(5, cli.getRazsoc());
+			ps.setString(6, cli.getRuccli());
+			ps.setString(7, cli.getUsureg());
+			ps.setString(8, cli.getRepleg());
+			ps.setString(9, cli.getDnirepl());
+			ps.setDate(10,(Date) cli.getFecreg());
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {
@@ -94,23 +94,24 @@ public class ClienteDAO implements ClienteDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="INSERT INTO TB_CLIENTE(CODCLI, NOMCLI, APECLI, DNICLI, TELCLI, DIRCLI, TIPPER, HOINRU, HOFIRU, USUREG, CLIEMP, RUTFOT,FECREG)  "+
-					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			cadSql="INSERT INTO TB_CLIENTE(CODCLI, NOMCLI, APECLI, DNICLI, TELEF1, TELEF2, DIRCLI, TIPPER, HOINRU, HOFIRU, USUREG, CLIEMP, RUTFOT,FECREG,FECNAC)  "+
+					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setLong(1, cli.getCodigoCliente());
-			ps.setString(2, cli.getNombreCliente());
-			ps.setString(3, cli.getApellidoCliente());
-			ps.setString(4, cli.getDni());
-			ps.setString(5, cli.getTelefonoCliente());
-			ps.setString(6, cli.getDireccionCliente());
-			ps.setString(7, cli.getTipoPersona());
-			ps.setTime(8, cli.getHoraInicioRutina());
-			ps.setTime(9, cli.getHoraFinRutina());
-			ps.setString(10, cli.getUsuarioRegistro());
-			ps.setLong(11, cli.getClienteEmpresa());
-			ps.setString(12, cli.getRutaFoto());
-			ps.setDate(13,(Date) cli.getFechaRegistro());
+			ps.setLong(1, cli.getCodcli());
+			ps.setString(2, cli.getNomcli());
+			ps.setString(3, cli.getApecli());
+			ps.setString(4, cli.getDnicli());
+			ps.setString(5, cli.getTelef1());
+			ps.setString(6, cli.getDircli());
+			ps.setString(7, cli.getTipper());
+			ps.setTime(8, cli.getHoinru());
+			ps.setTime(9, cli.getHofiru());
+			ps.setString(10, cli.getUsureg());
+			ps.setLong(11, cli.getCliemp());
+			ps.setString(12, cli.getRutfot());
+			ps.setDate(13,(Date) cli.getFecreg());
+			ps.setDate(14,(Date) cli.getFecnac());
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {
@@ -399,8 +400,8 @@ public class ClienteDAO implements ClienteDAOLocal {
 		try {
 			cadSql.append("SELECT ");
 			cadSql.append("CODCLI,NOMCLI,APECLI,DNICLI,");
-			cadSql.append("TELCLI,DIRCLI,TIPPER,");
-			cadSql.append("HOINRU,HOFIRU,CLIEMP,RUTFOT ");
+			cadSql.append("TELEF1,TELEF2,DIRCLI,TIPPER,");
+			cadSql.append("HOINRU,HOFIRU,CLIEMP,RUTFOT,FECNAC ");
 			cadSql.append(" FROM TB_CLIENTE WHERE CODCLI = ?");
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql.toString());
@@ -408,17 +409,19 @@ public class ClienteDAO implements ClienteDAOLocal {
 			rs=ps.executeQuery();
 			if (rs.next()){
 				cli = new Cliente();
-				cli.setCodigoCliente(rs.getLong(1));
-				cli.setNombreCliente(rs.getString(2));
-				cli.setApellidoCliente(rs.getString(3));
-				cli.setDni(rs.getString(4));
-				cli.setTelefonoCliente(rs.getString(5));
-				cli.setDireccionCliente(rs.getString(6));
-				cli.setTipoPersona(rs.getString(7));
-				cli.setHoraInicioRutina(rs.getTime(8));
-				cli.setHoraFinRutina(rs.getTime(9));
-				cli.setClienteEmpresa(rs.getLong(10));
-				cli.setRutaFoto(rs.getString(11));
+				cli.setCodcli(rs.getLong(1));
+				cli.setNomcli(rs.getString(2));
+				cli.setApecli(rs.getString(3));
+				cli.setDnicli(rs.getString(4));
+				cli.setTelef1(rs.getString(5));
+				cli.setTelef2(rs.getString(6));
+				cli.setDircli(rs.getString(7));
+				cli.setTipper(rs.getString(8));
+				cli.setHoinru(rs.getTime(9));
+				cli.setHofiru(rs.getTime(10));
+				cli.setCliemp(rs.getLong(11));
+				cli.setRutfot(rs.getString(12));
+				cli.setFecnac(rs.getDate(13));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);
@@ -458,7 +461,7 @@ public class ClienteDAO implements ClienteDAOLocal {
 		Cliente cli = null;
 		try {
 			cadSql.append("SELECT ");
-			cadSql.append("CODCLI,TELCLI,DIRCLI,TIPPER,");
+			cadSql.append("CODCLI,TELEF1,DIRCLI,TIPPER,");
 			cadSql.append("RAZSOC,RUCCLI,REPLEG,DNIREPL");
 			cadSql.append(" FROM TB_CLIENTE WHERE CODCLI = ?");
 			cn=ds.getConnection();
@@ -468,14 +471,14 @@ public class ClienteDAO implements ClienteDAOLocal {
 			
 			if (rs.next()){
 				cli = new Cliente();
-				cli.setCodigoCliente(rs.getLong(1));
-				cli.setTelefonoCliente(rs.getString(2));
-				cli.setDireccionCliente(rs.getString(3));
-				cli.setTipoPersona(rs.getString(4));
-				cli.setRazonSocial(rs.getString(5));
-				cli.setRucCliente(rs.getString(6));
-				cli.setRepLegal(rs.getString(7));
-				cli.setDniRepLegal(rs.getString(8));
+				cli.setCodcli(rs.getLong(1));
+				cli.setTelef1(rs.getString(2));
+				cli.setDircli(rs.getString(3));
+				cli.setTipper(rs.getString(4));
+				cli.setRazsoc(rs.getString(5));
+				cli.setRuccli(rs.getString(6));
+				cli.setRepleg(rs.getString(7));
+				cli.setDnirepl(rs.getString(8));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);
@@ -516,25 +519,28 @@ public class ClienteDAO implements ClienteDAOLocal {
 		try {
 			cadSql.append("UPDATE TB_CLIENTE ");
 			cadSql.append("SET NOMCLI = ?, APECLI = ?, DNICLI = ?,");
-			cadSql.append("TELCLI = ?, DIRCLI = ?, TIPPER = ?,");
+			cadSql.append("TELEF1 = ?, TELEF2 = ?, DIRCLI = ?, TIPPER = ?,");
 			cadSql.append("HOINRU = ?, HOFIRU = ?, CLIEMP = ?, RUTFOT = ?, ");
-			cadSql.append("USUMOD = ?, FECMOD = ? ");
+			cadSql.append("USUMOD = ?, FECMOD = ?, FECANC = ? ");
 			cadSql.append("WHERE CODCLI = ?");
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql.toString());
-			ps.setString(1,cli.getNombreCliente());
-			ps.setString(2,cli.getApellidoCliente());
-			ps.setString(3,cli.getDni());
-			ps.setString(4,cli.getTelefonoCliente());
-			ps.setString(5,cli.getDireccionCliente());
-			ps.setString(6,cli.getTipoPersona());
-			ps.setTime(7,cli.getHoraInicioRutina());
-			ps.setTime(8,cli.getHoraFinRutina());
-			ps.setLong(9,cli.getClienteEmpresa());
-			ps.setString(10,cli.getRutaFoto());
-			ps.setString(11,cli.getUsuarioModificacion());
-			ps.setDate(12,(Date)cli.getFechaModificacion());
-			ps.setLong(13,cli.getCodigoCliente());
+			ps.setString(1,cli.getNomcli());
+			ps.setString(2,cli.getApecli());
+			ps.setString(3,cli.getDnicli());
+			ps.setString(4,cli.getTelef1());
+			ps.setString(5,cli.getTelef2());
+			ps.setString(6,cli.getDircli());
+			ps.setString(7,cli.getTipper());
+			ps.setTime(8,cli.getHoinru());
+			ps.setTime(9,cli.getHofiru());
+			ps.setLong(10,cli.getCliemp());
+			ps.setString(11,cli.getRutfot());
+			ps.setString(12,cli.getUsumod());
+			ps.setDate(13,(Date)cli.getFecmod());
+			ps.setDate(14,(Date)cli.getFecnac());
+			ps.setLong(15,cli.getCodcli());
+			
 			res = (ps.executeUpdate()!=0)?0:1;
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);
@@ -574,20 +580,20 @@ public class ClienteDAO implements ClienteDAOLocal {
 		int res = 0;
 		try {
 			cadSql.append("UPDATE TB_CLIENTE ");
-			cadSql.append("TELCLI = ?, DIRCLI = ?, RAZSOC = ?, RUCCLI = ?,");
+			cadSql.append("TELEF1 = ?, DIRCLI = ?, RAZSOC = ?, RUCCLI = ?,");
 			cadSql.append("REPLEG = ?, DNIREPL = ?,USUMOD = ?, FECMOD = ?  ");
 			cadSql.append("WHERE CODCLI = ?");
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql.toString());
-			ps.setString(1,cli.getTelefonoCliente());
-			ps.setString(2,cli.getDireccionCliente());
-			ps.setString(3,cli.getRazonSocial());
-			ps.setString(4,cli.getRucCliente());
-			ps.setString(5,cli.getRepLegal());
-			ps.setString(6,cli.getDniRepLegal());
-			ps.setString(7,cli.getUsuarioModificacion());
-			ps.setDate(8,(Date)cli.getFechaModificacion());
-			ps.setLong(9,cli.getCodigoCliente());
+			ps.setString(1,cli.getTelef1());
+			ps.setString(2,cli.getDircli());
+			ps.setString(3,cli.getRazsoc());
+			ps.setString(4,cli.getRuccli());
+			ps.setString(5,cli.getRepleg());
+			ps.setString(6,cli.getDnirepl());
+			ps.setString(7,cli.getUsumod());
+			ps.setDate(8,(Date)cli.getFecmod());
+			ps.setLong(9,cli.getCodcli());
 			res = (ps.executeUpdate()!=0)?0:1;
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);

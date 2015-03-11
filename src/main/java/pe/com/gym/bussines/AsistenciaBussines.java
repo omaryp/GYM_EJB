@@ -13,8 +13,8 @@ import javax.ejb.Stateless;
 import pe.com.gym.dao.AsistenciaDAOLocal;
 import pe.com.gym.dao.HuellaDAOLocal;
 import pe.com.gym.dto.ClienteDTO;
-import pe.com.gym.entidades_ant.Asistencia;
-import pe.com.gym.entidades_ant.PlantillaHuella;
+import pe.com.gym.entidades.Asistencia;
+import pe.com.gym.entidades.PlantillaHuella;
 
 import com.digitalpersona.onetouch.DPFPFeatureSet;
 import com.digitalpersona.onetouch.DPFPFeatureSetFactory;

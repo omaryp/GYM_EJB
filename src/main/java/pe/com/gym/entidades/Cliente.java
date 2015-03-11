@@ -1,7 +1,6 @@
 package pe.com.gym.entidades;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.Date;
 
@@ -18,7 +17,7 @@ public class Cliente implements Serializable {
 
 	private String apecli;
 
-	private BigDecimal cliemp;
+	private long cliemp;
 
 	private String dircli;
 
@@ -26,7 +25,7 @@ public class Cliente implements Serializable {
 
 	private String dnirepl;
 
-	private BigDecimal estcli;
+	private int estcli;
 
 	private Date fecmod;
 
@@ -77,11 +76,11 @@ public class Cliente implements Serializable {
 		this.apecli = apecli;
 	}
 
-	public BigDecimal getCliemp() {
+	public long getCliemp() {
 		return this.cliemp;
 	}
 
-	public void setCliemp(BigDecimal cliemp) {
+	public void setCliemp(long cliemp) {
 		this.cliemp = cliemp;
 	}
 
@@ -109,11 +108,11 @@ public class Cliente implements Serializable {
 		this.dnirepl = dnirepl;
 	}
 
-	public BigDecimal getEstcli() {
+	public int getEstcli() {
 		return this.estcli;
 	}
 
-	public void setEstcli(BigDecimal estcli) {
+	public void setEstcli(int estcli) {
 		this.estcli = estcli;
 	}
 

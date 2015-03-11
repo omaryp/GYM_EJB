@@ -3,7 +3,7 @@ package pe.com.gym.facade;
 import javax.ejb.Remote;
 
 import pe.com.gym.dto.ClienteDTO;
-import pe.com.gym.entidades_ant.PlantillaHuella;
+import pe.com.gym.entidades.PlantillaHuella;
 
 
 

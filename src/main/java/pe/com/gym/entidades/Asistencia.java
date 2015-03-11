@@ -1,6 +1,7 @@
 package pe.com.gym.entidades;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Time;
 
 /**
@@ -13,9 +14,9 @@ public class Asistencia implements Serializable {
 
 	private long codcli;
 
-	private long tipmar;
+	private int tipmar;
 
-	private java.util.Date fecmar;
+	private Date fecmar;
 
 	private Time hormar;
 
@@ -30,19 +31,19 @@ public class Asistencia implements Serializable {
 		this.codcli = codcli;
 	}
 
-	public long getTipmar() {
+	public int getTipmar() {
 		return this.tipmar;
 	}
 
-	public void setTipmar(long tipmar) {
+	public void setTipmar(int tipmar) {
 		this.tipmar = tipmar;
 	}
 
-	public java.util.Date getFecmar() {
+	public Date getFecmar() {
 		return this.fecmar;
 	}
 
-	public void setFecmar(java.util.Date fecmar) {
+	public void setFecmar(Date fecmar) {
 		this.fecmar = fecmar;
 	}
 

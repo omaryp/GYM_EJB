@@ -13,7 +13,7 @@ import javax.ejb.Stateless;
 import javax.sql.DataSource;
 
 import pe.com.gym.dto.ClienteDTO;
-import pe.com.gym.entidades_ant.Asistencia;
+import pe.com.gym.entidades.Asistencia;
 
 /**
  * Registro de asistencia

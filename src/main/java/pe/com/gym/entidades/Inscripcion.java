@@ -14,7 +14,7 @@ public class Inscripcion implements Serializable {
 
 	private long codmod;
 
-	private long correl;
+	private int correl;
 
 	private int codser;
 
@@ -53,11 +53,11 @@ public class Inscripcion implements Serializable {
 		this.codmod = codmod;
 	}
 
-	public long getCorrel() {
+	public int getCorrel() {
 		return this.correl;
 	}
 
-	public void setCorrel(long correl) {
+	public void setCorrel(int correl) {
 		this.correl = correl;
 	}
 

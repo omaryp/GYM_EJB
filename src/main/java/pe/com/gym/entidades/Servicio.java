@@ -1,7 +1,7 @@
 package pe.com.gym.entidades;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 
 /**
@@ -22,7 +22,7 @@ public class Servicio implements Serializable {
 
 	private Date fecreg;
 
-	private int monser;
+	private double monser;
 
 	private String nomser;
 
@@ -73,11 +73,11 @@ public class Servicio implements Serializable {
 		this.fecreg = fecreg;
 	}
 
-	public int getMonser() {
+	public double getMonser() {
 		return this.monser;
 	}
 
-	public void setMonser(int monser) {
+	public void setMonser(double monser) {
 		this.monser = monser;
 	}
 

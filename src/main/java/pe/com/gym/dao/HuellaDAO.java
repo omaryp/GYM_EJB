@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.sql.DataSource;
 
-import pe.com.gym.entidades_ant.Huella;
+import pe.com.gym.entidades.Huella;
 
 /**
  * Acceso a datos de Clientes
@@ -45,12 +45,12 @@ public class HuellaDAO implements HuellaDAOLocal {
 			cadSql="{call ingresa_huella(?,?,?,?,?,?)}";
 			cn=ds.getConnection();
 			cs=cn.prepareCall(cadSql);
-			cs.setLong(1, hue.getId().getCodcli());
+			cs.setLong(1, hue.getCodcli());
 			cs.setString(2, hue.getDnicli());
 			cs.setDate(3,new Date(hue.getFecreg().getTime()));
 			cs.setBinaryStream(4, hue.getHuecli(),tamhuella);
 			cs.setInt(5, 0);
-			cs.setString(6, hue.getUsuReg());
+			cs.setString(6, hue.getUsureg());
 			cs.execute();
 			res = cs.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {

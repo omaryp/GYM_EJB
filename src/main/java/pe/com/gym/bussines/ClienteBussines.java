@@ -8,7 +8,7 @@ import javax.ejb.Stateless;
 
 import pe.com.gym.dao.ClienteDAOLocal;
 import pe.com.gym.dto.ClienteDTO;
-import pe.com.gym.entidades_ant.Cliente;
+import pe.com.gym.entidades.Cliente;
 
 /**
  * 
@@ -28,7 +28,7 @@ public class ClienteBussines implements ClienteBussinesLocal {
 	
 	@Override
 	public int guardarCliente(Cliente cli) {
-		if(cli.getTipoPersona().equals("N"))
+		if(cli.getTipper().equals("N"))
 			return cliente.guardarClientePN(cli);
 		else 
 			return cliente.guardarClientePJ(cli);

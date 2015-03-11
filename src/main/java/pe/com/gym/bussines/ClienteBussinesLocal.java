@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.ejb.Local;
 
 import pe.com.gym.dto.ClienteDTO;
-import pe.com.gym.entidades_ant.Cliente;
+import pe.com.gym.entidades.Cliente;
 
 
 
