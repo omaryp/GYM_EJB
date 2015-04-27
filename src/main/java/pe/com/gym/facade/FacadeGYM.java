@@ -8,14 +8,25 @@ import javax.ejb.Stateless;
 
 import pe.com.gym.bussines.AsistenciaBussinesLocal;
 import pe.com.gym.bussines.ClienteBussinesLocal;
+import pe.com.gym.bussines.EmpleadoBussinesLocal;
 import pe.com.gym.bussines.HuellaBussinesLocal;
+import pe.com.gym.bussines.InscripcionBussinesLocal;
+import pe.com.gym.bussines.MenuBussinesLocal;
 import pe.com.gym.bussines.ModalidadPagoBussinesLocal;
+import pe.com.gym.bussines.PerfilBussinesLocal;
 import pe.com.gym.bussines.ServicioBussinesLocal;
+import pe.com.gym.bussines.UsuarioBussinesLocal;
 import pe.com.gym.dto.ClienteDTO;
 import pe.com.gym.entidades.Cliente;
+import pe.com.gym.entidades.Empleado;
+import pe.com.gym.entidades.Inscripcion;
+import pe.com.gym.entidades.InscripcionPk;
+import pe.com.gym.entidades.Menu;
 import pe.com.gym.entidades.ModalidadPago;
+import pe.com.gym.entidades.Perfil;
 import pe.com.gym.entidades.PlantillaHuella;
 import pe.com.gym.entidades.Servicio;
+import pe.com.gym.entidades.Usuario;
 
 
 @Stateless
@@ -35,6 +46,21 @@ public class FacadeGYM implements FacadeGYMLocal,FacadeGYMRemote {
 	
 	@EJB
 	private ServicioBussinesLocal servicio;
+	
+	@EJB
+	private InscripcionBussinesLocal inscripcion;
+	
+	@EJB
+	private UsuarioBussinesLocal usuario;
+	
+	@EJB
+	private MenuBussinesLocal menu;
+	
+	@EJB
+	private PerfilBussinesLocal perfil;
+	
+	@EJB
+	private EmpleadoBussinesLocal empleado;
 
 	@Override
 	public int guardarCliente(Cliente cli) {
@@ -74,6 +100,11 @@ public class FacadeGYM implements FacadeGYMLocal,FacadeGYMRemote {
 	@Override
 	public ClienteDTO obtenerClienteDNI(String dni){
 		return cliente.obtenerClienteDNI(dni);
+	}
+	
+	@Override
+	public Map<String, Object> busquedaGeneral(String valor, long codCli, int tipBus,int[] limites){
+		return cliente.busquedaGeneral(valor, codCli, tipBus, limites);
 	}
 	
 	//Huellas
@@ -159,4 +190,85 @@ public class FacadeGYM implements FacadeGYMLocal,FacadeGYMRemote {
 	public int cambiaEstadoServicio(long codMod, int nvoEstado){
 		return servicio.cambiaEstadoServicio(codMod, nvoEstado);
 	}
+	
+	//inscripciones
+	@Override
+	public Inscripcion getIncripcion(InscripcionPk id){
+		return inscripcion.getIncripcion(id);
+	}
+
+	@Override
+	public int registraInscripcion(Inscripcion ins){
+		return inscripcion.registraInscripcion(ins);
+	}
+
+	@Override
+	public int actualizaInscripcion(Inscripcion ins){
+		return inscripcion.actualizaInscripcion(ins);
+	}
+	
+	@Override
+	public int getCorrelativoIncripcion(){
+		return inscripcion.getCorrelativoIncripcion();
+	}
+
+	@Override
+	public Map<String, Object> listaInscripciones(String valBus, int[] limites){
+		return inscripcion.listaInscripciones(valBus, limites);
+	}
+
+	@Override
+	public int cancelarInscripcion(InscripcionPk id, int nvoEstado){
+		return inscripcion.cancelarInscripcion(id, nvoEstado);
+	}
+	
+	//para el manejo de usuarios
+	@Override
+	public int registraUsuario(Usuario usu){
+		return usuario.registraUsuario(usu);
+	}
+	
+	@Override
+	public  int actualizaUsuario(Usuario usu){
+		return usuario.actualizaUsuario(usu);
+	}
+
+	@Override	
+	public  boolean validaUsuario(String usu, String pass){
+		return usuario.validaUsuario(usu, pass);
+	}
+
+	@Override
+	public Usuario getUsuario(int codemp){
+		return usuario.getUsuario(codemp);
+	}
+
+	@Override
+	public int eliminaUsuario(int codEmp){
+		return usuario.eliminaUsuario(codEmp);
+	}
+	
+	@Override
+	public Usuario getUsuario(String user){
+		return usuario.getUsuario(user);
+	}
+	
+	//para las opciones de menu
+	@Override
+	public List<Menu> getMenus(int codEmp){
+		return menu.getMenus(codEmp);
+	}
+	
+	//para los perfiles
+	@Override
+	public Perfil getPerfil(int codEmp){
+		return perfil.getPerfil(codEmp);
+	}
+	
+	//para los empleados
+	@Override
+	public Empleado getEmpleado(int codigoEmpleado){
+		return empleado.getEmpleado(codigoEmpleado);
+	}
+		
 }

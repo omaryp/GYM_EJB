@@ -35,4 +35,6 @@ public interface ClienteDAOLocal {
 
 	ClienteDTO obtenerClienteDNI(String dni);
 
+	ClienteDTO obtenerCliente(long codcli);
+
 }

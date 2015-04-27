@@ -1,6 +1,7 @@
 package pe.com.gym.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -104,7 +105,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 			ps.setInt(4, modal.getDiamod());
 			ps.setString(5, modal.getDesmod());
 			ps.setString(6, modal.getUsureg());
-			ps.setDate(7, modal.getFecreg());
+			ps.setDate(7,new Date(modal.getFecreg().getTime()));
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {
@@ -149,7 +150,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 			ps.setInt(3, modal.getDiamod());
 			ps.setString(4, modal.getDesmod());
 			ps.setString(5, modal.getUsumod());
-			ps.setDate(6, modal.getFecmod());
+			ps.setDate(6, new Date(modal.getFecmod().getTime()));
 			ps.setLong(7, modal.getCodmod());
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
@@ -261,7 +262,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 			}
 			
 			//Se obtiene los clientes por páginas
-			cadSql="SELECT CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD FROM TB_MODALIDAD_PAGO WHERE NOMMOD like ?) ORDER BY CODMOD DESC LIMIT ?,? ";
+			cadSql="SELECT CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD FROM TB_MODALIDAD_PAGO WHERE NOMMOD like ? ORDER BY CODMOD DESC LIMIT ?,? ";
 			ps=cn.prepareStatement(cadSql);
 			ps.setString(1, valBus+"%");
 			ps.setInt(2, limites[0]);

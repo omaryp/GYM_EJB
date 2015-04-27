@@ -94,8 +94,8 @@ public class ClienteDAO implements ClienteDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="INSERT INTO TB_CLIENTE(CODCLI, NOMCLI, APECLI, DNICLI, TELEF1, TELEF2, DIRCLI, TIPPER, HOINRU, HOFIRU, USUREG, CLIEMP, RUTFOT,FECREG,FECNAC)  "+
-					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			cadSql="INSERT INTO TB_CLIENTE(CODCLI, NOMCLI, APECLI, DNICLI, TELEF1, TELEF2, DIRCLI, TIPPER, USUREG, CLIEMP, RUTFOT,FECREG,FECNAC)  "+
+					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setLong(1, cli.getCodcli());
@@ -103,15 +103,14 @@ public class ClienteDAO implements ClienteDAOLocal {
 			ps.setString(3, cli.getApecli());
 			ps.setString(4, cli.getDnicli());
 			ps.setString(5, cli.getTelef1());
-			ps.setString(6, cli.getDircli());
-			ps.setString(7, cli.getTipper());
-			ps.setTime(8, cli.getHoinru());
-			ps.setTime(9, cli.getHofiru());
-			ps.setString(10, cli.getUsureg());
-			ps.setLong(11, cli.getCliemp());
-			ps.setString(12, cli.getRutfot());
-			ps.setDate(13,(Date) cli.getFecreg());
-			ps.setDate(14,(Date) cli.getFecnac());
+			ps.setString(6, cli.getTelef2());
+			ps.setString(7, cli.getDircli());
+			ps.setString(8, cli.getTipper());
+			ps.setString(9, cli.getUsureg());
+			ps.setLong(10, cli.getCliemp());
+			ps.setString(11, cli.getRutfot());
+			ps.setDate(12,new Date(cli.getFecreg().getTime()));
+			ps.setDate(13,new Date(cli.getFecnac().getTime()));
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {
@@ -199,12 +198,11 @@ public class ClienteDAO implements ClienteDAOLocal {
 		Map<String,Object> map = new HashMap<String, Object>();
 		try {
 			//Se obtiene total de registros
-			cadSql="SELECT COUNT(*) FROM TB_CLIENTE WHERE TIPPER =? and (NOMCLI like ? or APECLI like ?)";
+			cadSql="SELECT COUNT(*) FROM TB_CLIENTE WHERE TIPPER ='N' and (NOMCLI like ? or APECLI like ?)";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setString(1, "N");
+			ps.setString(1, valBus+"%");
 			ps.setString(2, valBus+"%");
-			ps.setString(3, valBus+"%");
 			rs=ps.executeQuery();
 			if(rs.next())
 				total = rs.getInt(1);
@@ -277,11 +275,10 @@ public class ClienteDAO implements ClienteDAOLocal {
 		Map<String,Object> map = new HashMap<String, Object>();
 		try {
 			//Se obtiene total de registros
-			cadSql="SELECT COUNT(*) FROM TB_CLIENTE WHERE TIPPER=? and RAZSOC like ? ";
+			cadSql="SELECT COUNT(*) FROM TB_CLIENTE WHERE TIPPER='J' and RAZSOC like ? ";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setString(1, "J");
-			ps.setString(2, valBus+"%");
+			ps.setString(1, valBus+"%");
 			rs=ps.executeQuery();
 			if(rs.next())
 				total = rs.getInt(1);
@@ -401,7 +398,7 @@ public class ClienteDAO implements ClienteDAOLocal {
 			cadSql.append("SELECT ");
 			cadSql.append("CODCLI,NOMCLI,APECLI,DNICLI,");
 			cadSql.append("TELEF1,TELEF2,DIRCLI,TIPPER,");
-			cadSql.append("HOINRU,HOFIRU,CLIEMP,RUTFOT,FECNAC ");
+			cadSql.append("CLIEMP,RUTFOT,FECNAC ");
 			cadSql.append(" FROM TB_CLIENTE WHERE CODCLI = ?");
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql.toString());
@@ -417,11 +414,61 @@ public class ClienteDAO implements ClienteDAOLocal {
 				cli.setTelef2(rs.getString(6));
 				cli.setDircli(rs.getString(7));
 				cli.setTipper(rs.getString(8));
-				cli.setHoinru(rs.getTime(9));
-				cli.setHofiru(rs.getTime(10));
-				cli.setCliemp(rs.getLong(11));
-				cli.setRutfot(rs.getString(12));
-				cli.setFecnac(rs.getDate(13));
+				cli.setCliemp(rs.getLong(9));
+				cli.setRutfot(rs.getString(10));
+				cli.setFecnac(rs.getDate(11));
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, "Error en la ejecucion",e);
+			cli = null;
+		} finally{
+			try {
+                if (ps!= null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
+            }
+			try {
+                if (rs!= null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
+            }
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
+            }
+		}
+		return cli;
+	}
+	
+	@Override
+	public ClienteDTO obtenerCliente(long codcli){
+		Connection cn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		StringBuilder cadSql= new StringBuilder();
+		ClienteDTO cli = null;
+		try {
+			cadSql.append("SELECT ");
+			cadSql.append("CODCLI,NOMCLI,APECLI,DNICLI,DIRCLI ");
+			cadSql.append(" FROM TB_CLIENTE WHERE CODCLI = ?");
+			cn=ds.getConnection();
+			ps=cn.prepareStatement(cadSql.toString());
+			ps.setLong(1, codcli);
+			rs=ps.executeQuery();
+			if (rs.next()){
+				cli = new ClienteDTO();
+				cli.setCodigoCliente(rs.getLong(1));
+				cli.setNombreCliente(rs.getString(2));
+				cli.setApellidoCliente(rs.getString(3));
+				cli.setDni(rs.getString(4));
+				cli.setDireccionCliente(rs.getString(5));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);
@@ -520,8 +567,8 @@ public class ClienteDAO implements ClienteDAOLocal {
 			cadSql.append("UPDATE TB_CLIENTE ");
 			cadSql.append("SET NOMCLI = ?, APECLI = ?, DNICLI = ?,");
 			cadSql.append("TELEF1 = ?, TELEF2 = ?, DIRCLI = ?, TIPPER = ?,");
-			cadSql.append("HOINRU = ?, HOFIRU = ?, CLIEMP = ?, RUTFOT = ?, ");
-			cadSql.append("USUMOD = ?, FECMOD = ?, FECANC = ? ");
+			cadSql.append("CLIEMP = ?, RUTFOT = ?, ");
+			cadSql.append("USUMOD = ?, FECMOD = ?, FECNAC = ? ");
 			cadSql.append("WHERE CODCLI = ?");
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql.toString());
@@ -532,14 +579,12 @@ public class ClienteDAO implements ClienteDAOLocal {
 			ps.setString(5,cli.getTelef2());
 			ps.setString(6,cli.getDircli());
 			ps.setString(7,cli.getTipper());
-			ps.setTime(8,cli.getHoinru());
-			ps.setTime(9,cli.getHofiru());
-			ps.setLong(10,cli.getCliemp());
-			ps.setString(11,cli.getRutfot());
-			ps.setString(12,cli.getUsumod());
-			ps.setDate(13,(Date)cli.getFecmod());
-			ps.setDate(14,(Date)cli.getFecnac());
-			ps.setLong(15,cli.getCodcli());
+			ps.setLong(8,cli.getCliemp());
+			ps.setString(9,cli.getRutfot());
+			ps.setString(10,cli.getUsumod());
+			ps.setDate(11,new Date(cli.getFecmod().getTime()));
+			ps.setDate(12,new Date(cli.getFecnac().getTime()));
+			ps.setLong(13,cli.getCodcli());
 			
 			res = (ps.executeUpdate()!=0)?0:1;
 		} catch (SQLException e) {

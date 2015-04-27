@@ -17,54 +17,62 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.sql.DataSource;
 
-import pe.com.gym.entidades.Servicio;
+import pe.com.gym.dto.InscripcionDTO;
+import pe.com.gym.entidades.Inscripcion;
+import pe.com.gym.entidades.InscripcionPk;
+
 
 /**
- * Administración de las modaliades de pago
+ * Administración de inscripciones de clientes (Matricula)
  * @author Omar Yarleque
  */
 
 @Stateless
-public class ServicioDAO implements ServicioDAOLocal {
+public class InscripcionDAO implements InscripcionDAOLocal {
 	
 	@Resource(name = "jdbc/__default")
 	DataSource ds;
-	private final static Logger logger = Logger.getLogger(ServicioDAO.class.getName());
+	private final static Logger logger = Logger.getLogger(InscripcionDAO.class.getName());
 	
 	/**
-	 * Obtiene servicio
-	 * @param codSer numero del tipo <code>long</code>, código de servicio
-	 * @return Servicio retorna el servicio que tenga la coincidencia con el código pasado como parametro 
+	 * Obtiene inscripcion de un cliente
+	 * @param id Objeto del tipo <code>InscripcionPk</code>, codigo de inscripcion
+	 * @return Inscripcion retorna la inscripcion del cliente
 	 */
 	@Override
-	public Servicio getServicio(int codSer){
+	public Inscripcion getIncripcion(InscripcionPk id){
 		Connection cn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String cadSql="";
-		Servicio servicio;
+		Inscripcion inscripcion;
 		try {
-			cadSql="SELECT CODSER,NOMSER,DESER,ESTSER,MONSER,USUREG,FECREG,USUMOD,FECMOD TB_SERVICIOS WHERE CODSER = ?";
+			cadSql="SELECT  NOMCLI, NOMMOD, NOMSER, HOINRU, HOFIRU, ESTINS, FECREG, USUREG, FECMOD, USUMOD TB_INSCRIPCION WHERE CODCLI = ? and CODMOD = ? and CODSER = ?  and CORREL = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setLong(1,codSer);
+			ps.setLong(1,id.getCodcli());
+			ps.setInt(2,id.getCodmod());
+			ps.setInt(3,id.getCodser());
+			ps.setInt(4,id.getCorrel());
 			rs = ps.executeQuery();
 			if(rs.next()){
-				servicio = new Servicio();
-				servicio.setCodser(rs.getInt(1));
-				servicio.setNomser(rs.getString(2));
-				servicio.setDesser(rs.getString(3));
-				servicio.setEstser(rs.getInt(4));
-				servicio.setMonser(rs.getDouble(5));
-				servicio.setUsureg(rs.getString(5));
-				servicio.setFecreg(rs.getDate(6));
-				servicio.setUsumod(rs.getString(7));
-				servicio.setFecmod(rs.getDate(8));
+				inscripcion = new Inscripcion();
+				inscripcion.setId(id);
+				inscripcion.setNomcli(rs.getString(1));
+				inscripcion.setNommod(rs.getString(2));
+				inscripcion.setNomser(rs.getString(3));
+				inscripcion.setHoinru(rs.getTime(4));
+				inscripcion.setHofiru(rs.getTime(5));
+				inscripcion.setEstins(rs.getInt(6));
+				inscripcion.setFecreg(rs.getDate(7));
+				inscripcion.setUsureg(rs.getString(8));
+				inscripcion.setFecmod(rs.getDate(9));
+				inscripcion.setUsumod(rs.getString(10));
 			}else
-				servicio = null;
+				inscripcion = null;
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);
-			servicio = null;
+			inscripcion = null;
 		} finally{
 			try {
                 if (ps != null) {
@@ -81,31 +89,36 @@ public class ServicioDAO implements ServicioDAOLocal {
                 logger.log(Level.SEVERE, "No se pudo liberar el recurso");
             }
 		}
-		return servicio;
+		return inscripcion;
 	}
 	
 	/**
-	 * Guarda servicio
-	 * @param servic Objeto <code>Servicio</code> a guardar
+	 * Guarda inscripcion del cliente
+	 * @param ins  Objeto <code>Inscripcion</code> a guardar
 	 * @return int   Si esta todo correcto retorna cero
 	 */
 	@Override
-	public int registraServicio(Servicio servic){
+	public int registraInscripcion(Inscripcion ins){
 		Connection cn = null;
 		PreparedStatement ps = null;
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="INSERT INTO TB_SERVICIOS (CODSER,NOMSER,DESSER,ESTSER,MONSER,USUREG,FECREG) VALUES(?,?,?,?,?,?,?)";
+			cadSql="INSERT INTO TB_INSCRIPCION (CODCLI,CODMOD,CODSER,CORREL,NOMCLI, NOMMOD, NOMSER, HOINRU, HOFIRU, ESTINS, FECREG, USUREG) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setLong(1, servic.getCodser());
-			ps.setString(2, servic.getNomser());
-			ps.setString(3, servic.getDesser());
-			ps.setInt(4,servic.getEstser());
-			ps.setDouble(5, servic.getMonser());
-			ps.setString(6, servic.getUsureg());
-			ps.setDate(7,(Date)servic.getFecreg());
+			ps.setLong(1,ins.getId().getCodcli());
+			ps.setInt(2,ins.getId().getCodmod());
+			ps.setInt(3,ins.getId().getCodser());
+			ps.setInt(4,ins.getId().getCorrel());
+			ps.setString(5, ins.getNomcli());
+			ps.setString(6, ins.getNommod());
+			ps.setString(7, ins.getNomser());
+			ps.setTime(8,ins.getHoinru());
+			ps.setTime(9,ins.getHofiru());
+			ps.setInt(10,ins.getEstins());
+			ps.setDate(11,(Date)ins.getFecreg());
+			ps.setString(12, ins.getUsureg());
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {
@@ -131,26 +144,34 @@ public class ServicioDAO implements ServicioDAOLocal {
 	}	
 	
 	/**
-	 * Actualiza Servicio
-	 * @param servic Objeto <code>Servicio</code> a guardar
+	 * Actualiza Inscripcion 
+	 * @param ins Objeto <code>Inscripcion</code> a guardar
 	 * @return int   Si esta todo correcto retorna cero
 	 */
 	@Override
-	public int actualizaServicio(Servicio servic){
+	public int actualizaInscripcion(Inscripcion ins){
 		Connection cn = null;
 		PreparedStatement ps = null;
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="UPDATE TB_SERVICIOS SET NOMSER = ?,ESTSER = ?,MONSER = ?,USUMOD = ?,FECMOD = ? WHERE CODSER = ?";
+			cadSql="UPDATE TB_INSCRIPCION SET CODMOD=?,CODSER=?,CORREL=?, NOMMOD=?, NOMSER=?, HOINRU=?, HOFIRU=?, ESTINS=?, FECMOD=?, USUMOD=? WHERE CODCLI = ? and CODMOD = ? and CODSER=? and CORREL = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setString(1, servic.getNomser());
-			ps.setInt(2,servic.getEstser());
-			ps.setDouble(3, servic.getMonser());
-			ps.setString(4, servic.getUsumod());
-			ps.setDate(5,(Date) servic.getFecmod());
-			ps.setLong(6, servic.getCodser());
+			ps.setInt(1,ins.getId().getCodmod());
+			ps.setInt(2,ins.getId().getCodser());
+			ps.setInt(3,ins.getId().getCorrel());
+			ps.setString(4, ins.getNommod());
+			ps.setString(5, ins.getNomser());
+			ps.setTime(6,ins.getHoinru());
+			ps.setTime(7,ins.getHofiru());
+			ps.setInt(8,ins.getEstins());
+			ps.setDate(9,(Date)ins.getFecmod());
+			ps.setString(10, ins.getUsumod());
+			ps.setLong(11,ins.getId().getCodcli());
+			ps.setInt(12,ins.getId().getCodmod());
+			ps.setInt(13,ins.getId().getCodser());
+			ps.setInt(14,ins.getId().getCorrel());
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {
@@ -177,18 +198,18 @@ public class ServicioDAO implements ServicioDAOLocal {
 	
 	/**
 	 * 
-	 * Obtiene nuevo código de servicio
-	 * @return Long nuevo código.
+	 * Obtiene nuevo correlativo de inscripcion
+	 * @return int nuevo correlativo
 	 */
 	@Override
-	public int getCodigoServicioNvo() {
+	public int getCorrelativoIncripcion() {
 		Connection cn = null;
 		Statement st = null;
 		ResultSet rs = null;
 		String cadSql="";
 		int codigo = 0;
 		try {
-			cadSql="SELECT MAX(CODSER) FROM TB_SERVICIOS";
+			cadSql="SELECT MAX(CORREL) FROM TB_INSCRIPCION";
 			cn=ds.getConnection();
 			st=cn.createStatement();
 			rs=st.executeQuery(cadSql);
@@ -227,24 +248,24 @@ public class ServicioDAO implements ServicioDAOLocal {
 	}
 	
 	/**
-	 * Lista los servicios de acuerdo a alguna coincidencia y los límites de la paginación
+	 * Lista inscripciones de los clientes
 	 * @param String Coincidencia 
 	 * @param int[] limites para la paginación
 	 * @return Map contiene las coincidencias.
 	 */
 	@SuppressWarnings("resource")
 	@Override
-	public Map<String, Object> listaServicios(String valBus,int[] limites){
+	public Map<String, Object> listaInscripciones(String valBus,int[] limites){
 		Connection cn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String cadSql = "";
 		int total = 0;
-		List<Servicio> servicios = new ArrayList<Servicio>();
+		List<InscripcionDTO> inscripciones = new ArrayList<InscripcionDTO>();
 		Map<String,Object> map = new HashMap<String, Object>();
 		try {
 			//Se obtiene total de registros
-			cadSql="SELECT COUNT(*) FROM TB_SERVICIOS WHERE NOMSER like ?";
+			cadSql="SELECT COUNT(*) FROM TB_INSCRIPCIONES WHERE NOMCLI like ? ";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setString(1, valBus+"%");
@@ -261,21 +282,27 @@ public class ServicioDAO implements ServicioDAOLocal {
 			}
 			
 			//Se obtiene los clientes por páginas
-			cadSql="SELECT CODSER,NOMSER,ESTSER,MONSER FROM TB_SERVICIOS WHERE NOMSER like ? ORDER BY CODSER DESC LIMIT ?,?";
+			cadSql="SELECT CODCLI,CODMOD,CODSER,CORREL,NOMCLI,NOMMOD,NOMSER,ESTINS FROM TB_INSCRIPCION WHERE NOMCLI like ?) ORDER BY FECREG DESC LIMIT ?,? ";
 			ps=cn.prepareStatement(cadSql);
 			ps.setString(1, valBus+"%");
 			ps.setInt(2, limites[0]);
 			ps.setInt(3, limites[1]);
 			rs=ps.executeQuery();
 			while(rs.next()){
-				Servicio servicio= new Servicio();
-				servicio.setCodser(rs.getInt(1));
-				servicio.setNomser(rs.getString(2));
-				servicio.setEstser(rs.getInt(3));
-				servicio.setMonser(rs.getDouble(4));
-				servicios.add(servicio);
+				InscripcionPk id = new InscripcionPk();
+				InscripcionDTO inscripcion= new InscripcionDTO();
+				id.setCodcli(rs.getLong(1));
+				id.setCodmod(rs.getInt(2));
+				id.setCodser(rs.getInt(3));
+				id.setCorrel(rs.getInt(4));
+				inscripcion.setId(id);
+				inscripcion.setNomcli(rs.getString(5));
+				inscripcion.setNommod(rs.getString(6));
+				inscripcion.setNomser(rs.getString(7));
+				inscripcion.setEstins(rs.getInt(8));
+				inscripciones.add(inscripcion);
 			}
-			map.put("SERVICIOS", servicios);
+			map.put("INSCRIPCIONES", inscripciones);
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);
 			map = null;
@@ -306,76 +333,25 @@ public class ServicioDAO implements ServicioDAOLocal {
 	}
 	
 	/**
-	 * Lista las servicios activos
-	 * @return List lista con servicios activos.
-	 */
-	@Override
-	public List<Servicio> listaServicios(){
-		Connection cn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		String cadSql = "";
-		List<Servicio> servicios = new ArrayList<Servicio>();
-		try {
-			//Se obtiene los clientes por páginas
-			cadSql="SELECT CODSER,NOMSER,MONSER FROM TB_SERVICIOS WHERE ESTSER = ? ";
-			cn=ds.getConnection();
-			ps=cn.prepareStatement(cadSql);
-			ps.setInt(1,1);
-			rs=ps.executeQuery();
-			while(rs.next()){
-				Servicio servicio= new Servicio();
-				servicio.setCodser(rs.getInt(1));
-				servicio.setNomser(rs.getString(2));
-				servicio.setMonser(rs.getDouble(3));
-				servicios.add(servicio);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.SEVERE, "Error en la ejecucion",e);
-			servicios =  null;
-		} finally{
-			try {
-                if (ps!= null) {
-                    ps.close();
-                }
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
-            }
-			try {
-                if (rs!= null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
-            }
-            try {
-                if (cn != null) {
-                    cn.close();
-                }
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
-            }
-		}
-		return servicios;
-	}
-	
-	/**
-	 * Dar de baja al servicio, sólo se le cambia el estado
-	 * @param codMod código del servicio tipo<code>long</code>
+	 * Dar de baja a una inscripcion
+	 * @param id  Objeto del tipo<code>InscripcionPK</code>
 	 * @return int   Si esta todo correcto retorna cero
 	 */
 	@Override
-	public int cambiaEstadoServicio(long codMod,int nvoEstado){
+	public int cancelarInscripcion(InscripcionPk id,int nvoEstado){
 		Connection cn = null;
 		PreparedStatement ps = null;
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="UPDATE TB_SERVICIOS SET ESTSER = ? WHERE CODSER = ?";
+			cadSql="UPDATE TB_INSCRIPCION SET ESTINS = ? WHERE CODCLI = ? and CODMOD = ? and CODSER = ? and CORREL = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setInt(1,nvoEstado);
-			ps.setLong(2,codMod);
+			ps.setLong(2,id.getCodcli());
+			ps.setLong(3,id.getCodmod());
+			ps.setLong(4,id.getCodser());
+			ps.setLong(5,id.getCorrel());
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {

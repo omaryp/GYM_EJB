@@ -3,58 +3,56 @@ package pe.com.gym.entidades;
 import java.io.Serializable;
 import java.util.Date;
 
-
 /**
+ * The persistent class for the tb_menu database table.
  * 
- * @author Omar Yarleque
  */
-
-public class Servicio implements Serializable {
+public class Menu implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private int codser;
+	private int codmen;
 
-	private String desser;
-
-	private int estser;
-
+	private String desmen;
+	
 	private Date fecmod;
 
 	private Date fecreg;
 
-	private double monser;
+	private String nommen;
 
-	private String nomser;
+	private String rutmen;
 
 	private String usumod;
 
 	private String usureg;
+	
+	private int estmen;
 
-	public Servicio() {
+	public Menu() {
 	}
 
-	public int getCodser() {
-		return this.codser;
+	public int getCodmen() {
+		return codmen;
 	}
 
-	public void setCodser(int codser) {
-		this.codser = codser;
+	public void setCodmen(int codmen) {
+		this.codmen = codmen;
 	}
 
-	public String getDesser() {
-		return this.desser;
+	public String getDesmen() {
+		return this.desmen;
 	}
 
-	public void setDesser(String desser) {
-		this.desser = desser;
+	public void setDesmen(String desmen) {
+		this.desmen = desmen;
 	}
 
-	public int getEstser() {
-		return this.estser;
+	public int getEstmen() {
+		return estmen;
 	}
 
-	public void setEstser(int estser) {
-		this.estser = estser;
+	public void setEstmen(int estmen) {
+		this.estmen = estmen;
 	}
 
 	public Date getFecmod() {
@@ -73,20 +71,20 @@ public class Servicio implements Serializable {
 		this.fecreg = fecreg;
 	}
 
-	public double getMonser() {
-		return this.monser;
+	public String getNommen() {
+		return this.nommen;
 	}
 
-	public void setMonser(double monser) {
-		this.monser = monser;
+	public void setNommen(String nommen) {
+		this.nommen = nommen;
 	}
 
-	public String getNomser() {
-		return this.nomser;
+	public String getRutmen() {
+		return this.rutmen;
 	}
 
-	public void setNomser(String nomser) {
-		this.nomser = nomser;
+	public void setRutmen(String rutmen) {
+		this.rutmen = rutmen;
 	}
 
 	public String getUsumod() {

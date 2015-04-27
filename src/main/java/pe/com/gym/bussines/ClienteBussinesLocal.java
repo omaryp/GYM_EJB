@@ -30,4 +30,7 @@ public interface ClienteBussinesLocal {
 
 	ClienteDTO obtenerClienteDNI(String dni);
 
+	Map<String, Object> busquedaGeneral(String valor, long codCli, int tipBus,
+			int[] limites);
+
 }

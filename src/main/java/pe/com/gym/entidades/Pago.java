@@ -14,9 +14,7 @@ public class Pago implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private long corpag;
-
-	private long codcli;
+	private PagoPk id ;
 
 	private double descue;
 
@@ -33,17 +31,12 @@ public class Pago implements Serializable {
 	public Pago() {
 	}
 	
-	public long getCorpag() {
-		return this.corpag;
+	public PagoPk getId() {
+		return id;
 	}
-	public void setCorpag(long corpag) {
-		this.corpag = corpag;
-	}
-	public long getCodcli() {
-		return this.codcli;
-	}
-	public void setCodcli(long codcli) {
-		this.codcli = codcli;
+
+	public void setId(PagoPk id) {
+		this.id = id;
 	}
 
 	public double getDescue() {

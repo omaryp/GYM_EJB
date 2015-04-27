@@ -1,23 +1,19 @@
-package pe.com.gym.entidades;
+package pe.com.gym.dto;
 
 import java.io.Serializable;
-import java.sql.Time;
-import java.util.Date;
+
+import pe.com.gym.entidades.InscripcionPk;
 
 /**
  * 
  * @author Omar Yarleque
  */
-public class Inscripcion implements Serializable {
+public class InscripcionDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private InscripcionPk id; 
-
+	
 	private int estins;
-
-	private Date fecmod;
-
-	private Date fecreg;
 
 	private String nomcli;
 
@@ -27,13 +23,7 @@ public class Inscripcion implements Serializable {
 
 	private String usumod;
 
-	private String usureg;
-	
-	private Time hoinru;
-	
-	private Time hofiru;
-
-	public Inscripcion() {
+	public InscripcionDTO() {
 	}
 	
 	public int getEstins() {
@@ -42,22 +32,6 @@ public class Inscripcion implements Serializable {
 
 	public void setEstins(int estins) {
 		this.estins = estins;
-	}
-
-	public Date getFecmod() {
-		return this.fecmod;
-	}
-
-	public void setFecmod(Date fecmod) {
-		this.fecmod = fecmod;
-	}
-
-	public Date getFecreg() {
-		return this.fecreg;
-	}
-
-	public void setFecreg(Date fecreg) {
-		this.fecreg = fecreg;
 	}
 
 	public String getNomcli() {
@@ -90,30 +64,6 @@ public class Inscripcion implements Serializable {
 
 	public void setUsumod(String usumod) {
 		this.usumod = usumod;
-	}
-
-	public String getUsureg() {
-		return this.usureg;
-	}
-
-	public void setUsureg(String usureg) {
-		this.usureg = usureg;
-	}
-
-	public Time getHoinru() {
-		return hoinru;
-	}
-
-	public void setHoinru(Time hoinru) {
-		this.hoinru = hoinru;
-	}
-
-	public Time getHofiru() {
-		return hofiru;
-	}
-
-	public void setHofiru(Time hofiru) {
-		this.hofiru = hofiru;
 	}
 
 	public InscripcionPk getId() {

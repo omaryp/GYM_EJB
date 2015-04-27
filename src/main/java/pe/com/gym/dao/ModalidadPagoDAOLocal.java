@@ -14,8 +14,6 @@ public interface ModalidadPagoDAOLocal {
 
 	int actualizaModalidad(ModalidadPago modal);
 
-	int registraModalidad(ModalidadPago modal);
-
 	Map<String, Object> listaModalidades(String valBus, int[] limites);
 
 	List<ModalidadPago> listaModalidades();
@@ -23,5 +21,7 @@ public interface ModalidadPagoDAOLocal {
 	ModalidadPago getModalidad(long codMod);
 
 	int cambiaEstadoModalidad(long codMod, int nvoEstado);
+
+	int registraModalidad(ModalidadPago modal);
 
 }

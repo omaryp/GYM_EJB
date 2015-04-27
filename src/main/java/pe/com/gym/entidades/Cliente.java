@@ -1,7 +1,6 @@
 package pe.com.gym.entidades;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.Date;
 
 
@@ -32,10 +31,6 @@ public class Cliente implements Serializable {
 	private Date fecnac;
 
 	private Date fecreg;
-
-	private Time hofiru;
-
-	private Time hoinru;
 
 	private String nomcli;
 
@@ -138,22 +133,6 @@ public class Cliente implements Serializable {
 
 	public void setFecreg(Date fecreg) {
 		this.fecreg = fecreg;
-	}
-
-	public Time getHofiru() {
-		return this.hofiru;
-	}
-
-	public void setHofiru(Time hofiru) {
-		this.hofiru = hofiru;
-	}
-
-	public Time getHoinru() {
-		return this.hoinru;
-	}
-
-	public void setHoinru(Time hoinru) {
-		this.hoinru = hoinru;
 	}
 
 	public String getNomcli() {

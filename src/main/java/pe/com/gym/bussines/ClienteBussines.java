@@ -1,5 +1,7 @@
 package pe.com.gym.bussines;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,5 +73,27 @@ public class ClienteBussines implements ClienteBussinesLocal {
 	@Override
 	public ClienteDTO obtenerClienteDNI(String dni){
 		return cliente.obtenerClienteDNI(dni);
+	}
+	
+	@Override
+	public Map<String, Object> busquedaGeneral(String valor,long codCli,int tipBus,int[]limites){
+		List<ClienteDTO> clientes = new ArrayList<ClienteDTO>();
+		Map<String,Object> map = new HashMap<String, Object>();
+		switch (tipBus) {
+		case 1:
+			cliente.listaClientesPN(valor,limites);
+			break;
+		case 2:
+			map.put("TOTAL", 1);
+			clientes.add(cliente.obtenerCliente(codCli));
+			map.put("CLIENTES", clientes);
+			break;
+		case 3:
+			map.put("TOTAL", 1);
+			clientes.add(cliente.obtenerClienteDNI(valor));
+			map.put("CLIENTES", clientes);
+			break;
+		}
+		return map;
 	}
 }
