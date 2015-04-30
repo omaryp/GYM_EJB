@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.ejb.Local;
 
 import pe.com.gym.entidades.Servicio;
+import pe.com.gym.entidades.TarifaServicio;
 
 
 @Local
@@ -14,8 +15,6 @@ public interface ServicioBussinesLocal {
 
 
 	Servicio getServicio(int codSer);
-
-	int registraServicio(Servicio servic);
 
 	int actualizaServicio(Servicio servic);
 
@@ -26,5 +25,7 @@ public interface ServicioBussinesLocal {
 	List<Servicio> listaServicios();
 
 	int cambiaEstadoServicio(long codMod, int nvoEstado);
+
+	int registraServicio(Servicio servic, List<TarifaServicio> tarifas);
 
 }

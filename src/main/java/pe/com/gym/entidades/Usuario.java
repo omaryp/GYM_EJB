@@ -23,6 +23,8 @@ public class Usuario implements Serializable {
 	private String usuemp;
 
 	private String usureg;
+	
+	private int estusr;
 
 	public Usuario() {
 	}
@@ -73,6 +75,14 @@ public class Usuario implements Serializable {
 
 	public void setUsureg(String usureg) {
 		this.usureg = usureg;
+	}
+
+	public int getEstusr() {
+		return estusr;
+	}
+
+	public void setEstusr(int estusr) {
+		this.estusr = estusr;
 	}
 
 }

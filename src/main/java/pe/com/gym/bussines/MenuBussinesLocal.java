@@ -14,5 +14,6 @@ public interface MenuBussinesLocal {
 
 	List<Menu> getMenus(int codEmp);
 
+	List<Menu> getMenus();
 
 }

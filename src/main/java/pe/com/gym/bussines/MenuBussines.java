@@ -25,4 +25,9 @@ public class MenuBussines implements MenuBussinesLocal {
 		return menu.getMenus(codEmp);
 	}
 	
+	@Override
+	public List<Menu> getMenus(){
+		return menu.getMenus();
+	}
+	
 }

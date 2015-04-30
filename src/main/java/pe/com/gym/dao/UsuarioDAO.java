@@ -34,15 +34,16 @@ public class UsuarioDAO implements UsuarioDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="INSERT INTO TB_USUARIO(CODEMP,CORREL,USUEMP,PASEMP,FECREG,USUREG) VALUES(?,?,?,?,?,?,?)";
+			cadSql="INSERT INTO tb_usuario(CODEMP,CORREL,USUEMP,PASEMP,ESTUSR,FECREG,USUREG) VALUES(?,?,?,?,?,?,?)";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setInt(1,usu.getId().getCodemp());
 			ps.setInt(2,usu.getId().getCorrel());
 			ps.setString(3,usu.getUsuemp());
 			ps.setString(4,usu.getPasemp());
-			ps.setDate(5,(Date)usu.getFecreg());
-			ps.setString(6,usu.getUsureg());
+			ps.setInt(5,usu.getEstusr());
+			ps.setDate(6,(Date)usu.getFecreg());
+			ps.setString(7,usu.getUsureg());
 			ps.execute();
 			res = ps.getUpdateCount()!=0?0:1;
 		} catch (SQLException e) {
@@ -74,7 +75,7 @@ public class UsuarioDAO implements UsuarioDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="UPDATE TB_USUARIO SET USUEMP=? ,PASEMP=?  WHERE CODEMP=? and CORREL =? ";
+			cadSql="UPDATE tb_usuario SET USUEMP=? ,PASEMP=?  WHERE CODEMP=? and CORREL =? ";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setString(1,usu.getUsuemp());
@@ -112,7 +113,7 @@ public class UsuarioDAO implements UsuarioDAOLocal {
 		ResultSet rs ;
 		String cadSql="";
 		try {
-			cadSql="SELECT USUEMP FROM TB_USUARIO WHERE USUEMP = ? and PASEMP = ? and ESTUSR = 0";
+			cadSql="SELECT USUEMP FROM tb_usuario WHERE USUEMP = ? and PASEMP = ? and ESTUSR = 0";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setString(1,usu);
@@ -151,7 +152,7 @@ public class UsuarioDAO implements UsuarioDAOLocal {
 		UsuarioPK userPk = null;
 		Usuario user = null;
 		try {
-			cadSql="SELECT CODEMP,CORREL,USUEMP,PASEMP,FECREG,USUREG FROM TB_USUARIO WHERE CODEMP = ?";
+			cadSql="SELECT CODEMP,CORREL,USUEMP,PASEMP,FECREG,USUREG FROM tb_usuario WHERE CODEMP = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setInt(1,codemp);
@@ -198,7 +199,7 @@ public class UsuarioDAO implements UsuarioDAOLocal {
 		UsuarioPK userPk = null;
 		Usuario user = null;
 		try {
-			cadSql="SELECT CODEMP,CORREL,USUEMP,PASEMP,FECREG,USUREG FROM TB_USUARIO WHERE USUEMP = ?";
+			cadSql="SELECT CODEMP,CORREL,USUEMP,PASEMP,FECREG,USUREG FROM tb_usuario WHERE USUEMP = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setString(1,usuario);
@@ -243,7 +244,7 @@ public class UsuarioDAO implements UsuarioDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="UPDATE TB_USUARIO SET ESTUSR = 1  WHERE CODEMP = ?";
+			cadSql="UPDATE tb_usuario SET ESTUSR = 1  WHERE CODEMP = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setInt(1,codEmp);

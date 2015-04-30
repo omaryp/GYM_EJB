@@ -14,7 +14,6 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.sql.DataSource;
 
-import pe.com.gym.dto.ClienteDTO;
 import pe.com.gym.entidades.Termino;
 
 
@@ -44,15 +43,10 @@ public class TerminoDAO implements TerminoDAOLocal {
 			rs=ps.executeQuery();
 			while(rs.next()){
 				Termino termino = new Termino();
-				termino.setCodter(rs.get);
-				termino.setRazonSocial(rs.getString(2));
-				termino.setRucCliente(rs.getString(3));
-				termino.setDireccionCliente(rs.getString(4));
 				terminos.add(termino);
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, "Error en la ejecucion",e);
-			clientes = null;
 		} finally{
 			try {
                 if (ps!= null) {
@@ -76,6 +70,6 @@ public class TerminoDAO implements TerminoDAOLocal {
                 logger.log(Level.SEVERE, "No se pudo liberar el recurso");
             }
 		}
-		return clientes;
+		return null;
 	}
 }

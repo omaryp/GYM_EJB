@@ -8,7 +8,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import pe.com.gym.dao.ServicioDAOLocal;
+import pe.com.gym.dao.TarifaServicioDAOLocal;
 import pe.com.gym.entidades.Servicio;
+import pe.com.gym.entidades.TarifaServicio;
 
 /**
  * 
@@ -20,6 +22,9 @@ public class ServicioBussines implements ServicioBussinesLocal {
 	
 	@EJB
 	private ServicioDAOLocal servicio;
+	
+	@EJB
+	private TarifaServicioDAOLocal tarifa;
 		
 	@Override
 	public Servicio getServicio(int codSer){
@@ -27,8 +32,14 @@ public class ServicioBussines implements ServicioBussinesLocal {
 	}
 
 	@Override
-	public int registraServicio(Servicio servic){
-		return servicio.registraServicio(servic);
+	public int registraServicio(Servicio servic,List<TarifaServicio> tarifas){
+		int res = servicio.registraServicio(servic);
+		if(res == 0){
+			for (TarifaServicio tarifaServicio : tarifas) {
+				tarifa.registraTarifa(tarifaServicio);
+			}
+		}
+		return res;
 	}
 
 	@Override

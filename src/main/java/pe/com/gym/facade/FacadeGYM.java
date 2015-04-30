@@ -15,6 +15,7 @@ import pe.com.gym.bussines.MenuBussinesLocal;
 import pe.com.gym.bussines.ModalidadPagoBussinesLocal;
 import pe.com.gym.bussines.PerfilBussinesLocal;
 import pe.com.gym.bussines.ServicioBussinesLocal;
+import pe.com.gym.bussines.TarifaServicioBussinesLocal;
 import pe.com.gym.bussines.UsuarioBussinesLocal;
 import pe.com.gym.dto.ClienteDTO;
 import pe.com.gym.entidades.Cliente;
@@ -26,6 +27,8 @@ import pe.com.gym.entidades.ModalidadPago;
 import pe.com.gym.entidades.Perfil;
 import pe.com.gym.entidades.PlantillaHuella;
 import pe.com.gym.entidades.Servicio;
+import pe.com.gym.entidades.TarifaServicio;
+import pe.com.gym.entidades.TarifaServicioPK;
 import pe.com.gym.entidades.Usuario;
 
 
@@ -61,6 +64,9 @@ public class FacadeGYM implements FacadeGYMLocal,FacadeGYMRemote {
 	
 	@EJB
 	private EmpleadoBussinesLocal empleado;
+	
+	@EJB
+	private TarifaServicioBussinesLocal tarifa;
 
 	@Override
 	public int guardarCliente(Cliente cli) {
@@ -162,8 +168,8 @@ public class FacadeGYM implements FacadeGYMLocal,FacadeGYMRemote {
 	}
 
 	@Override
-	public int registraServicio(Servicio servic){
-		return servicio.registraServicio(servic);
+	public int registraServicio(Servicio servic, List<TarifaServicio> tarifas){
+		return servicio.registraServicio(servic,tarifas);
 	}
 
 	@Override
@@ -259,10 +265,40 @@ public class FacadeGYM implements FacadeGYMLocal,FacadeGYMRemote {
 		return menu.getMenus(codEmp);
 	}
 	
+	@Override
+	public List<Menu> getMenus(){
+		return menu.getMenus();
+	}
+	
 	//para los perfiles
 	@Override
 	public Perfil getPerfil(int codEmp){
 		return perfil.getPerfil(codEmp);
+	}
+	
+	@Override
+	public List<Perfil> getPerfiles(){
+		return perfil.getPerfiles();
+	}
+	
+	@Override
+	public int getCodigoPerfilNvo(){
+		return perfil.getCodigoPerfilNvo();
+	}
+
+	@Override
+	public int registraPerfil(Perfil per,int[]menus){
+		return perfil.registraPerfil(per,menus);
+	}
+
+	@Override
+	public int actualizaPerfil(Perfil per){
+		return perfil.actualizaPerfil(per);
+	}
+	
+	@Override
+	public Map<String, Object> listaPerfiles(String valBus, int[] limites){
+		return perfil.listaPerfiles(valBus, limites);
 	}
 	
 	//para los empleados
@@ -270,5 +306,55 @@ public class FacadeGYM implements FacadeGYMLocal,FacadeGYMRemote {
 	public Empleado getEmpleado(int codigoEmpleado){
 		return empleado.getEmpleado(codigoEmpleado);
 	}
-		
+	
+	@Override
+	public Long getCodigoEmpleadoNvo(){
+		return empleado.getCodigoEmpleadoNvo();
+	}
+	
+	@Override
+	public int actualizarEmpleado(Empleado emp){
+		return empleado.actualizarEmpleado(emp);
+	}
+
+	@Override
+	public int darBajaEmpleado(long codEmp){
+		return empleado.darBajaEmpleado(codEmp);
+	}
+
+	@Override
+	public Map<String, Object> listaEmpleados(String valBus, int[] limites){
+		return empleado.listaEmpleados(valBus, limites);
+	}
+	
+	@Override
+	public int guardarEmpleado(Empleado emp,int perfil){
+		return empleado.guardarEmpleado(emp,perfil);
+	}
+	
+	//tarifa
+	@Override
+	public TarifaServicio getTarifa(TarifaServicioPK id){
+		return tarifa.getTarifa(id);
+	}
+	
+	@Override
+	public TarifaServicioPK getCodigoTarifaNva(int codser, int codmod){
+		return tarifa.getCodigoTarifaNva(codser, codmod);
+	}
+
+	@Override
+	public int darBajaTarifa(TarifaServicioPK id){
+		return tarifa.darBajaTarifa(id);
+	}
+
+	@Override
+	public List<TarifaServicio> listaTarifas(Servicio servicio){
+		return tarifa.listaTarifas(servicio);
+	}
+
+	@Override
+	public int registraTarifa(TarifaServicio tar){
+		return tarifa.registraTarifa(tar);
+	}
 }

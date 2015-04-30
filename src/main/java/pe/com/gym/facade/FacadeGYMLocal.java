@@ -14,6 +14,8 @@ import pe.com.gym.entidades.Menu;
 import pe.com.gym.entidades.ModalidadPago;
 import pe.com.gym.entidades.Perfil;
 import pe.com.gym.entidades.Servicio;
+import pe.com.gym.entidades.TarifaServicio;
+import pe.com.gym.entidades.TarifaServicioPK;
 import pe.com.gym.entidades.Usuario;
 
 
@@ -48,8 +50,6 @@ public interface FacadeGYMLocal {
 	ModalidadPago getModalidad(long codMod);
 
 	Servicio getServicio(int codSer);
-
-	int registraServicio(Servicio servic);
 
 	int actualizaServicio(Servicio servic);
 
@@ -95,5 +95,39 @@ public interface FacadeGYMLocal {
 
 	Map<String, Object> busquedaGeneral(String valor, long codCli, int tipBus,
 			int[] limites);
+
+	Long getCodigoEmpleadoNvo();
+
+	int actualizarEmpleado(Empleado emp);
+
+	int darBajaEmpleado(long codEmp);
+
+	Map<String, Object> listaEmpleados(String valBus, int[] limites);
+
+	List<Perfil> getPerfiles();
+
+	int guardarEmpleado(Empleado emp, int perfil);
+
+	int getCodigoPerfilNvo();
+
+	int actualizaPerfil(Perfil per);
+
+	Map<String, Object> listaPerfiles(String valBus, int[] limites);
+
+	List<Menu> getMenus();
+
+	int registraPerfil(Perfil per, int[] menus);
+
+	TarifaServicio getTarifa(TarifaServicioPK id);
+
+	TarifaServicioPK getCodigoTarifaNva(int codser, int codmod);
+
+	int darBajaTarifa(TarifaServicioPK id);
+
+	int registraTarifa(TarifaServicio tar);
+
+	List<TarifaServicio> listaTarifas(Servicio servicio);
+
+	int registraServicio(Servicio servic, List<TarifaServicio> tarifas);
 	
 }

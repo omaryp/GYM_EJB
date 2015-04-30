@@ -22,8 +22,6 @@ public class Servicio implements Serializable {
 
 	private Date fecreg;
 
-	private double monser;
-
 	private String nomser;
 
 	private String usumod;
@@ -71,14 +69,6 @@ public class Servicio implements Serializable {
 
 	public void setFecreg(Date fecreg) {
 		this.fecreg = fecreg;
-	}
-
-	public double getMonser() {
-		return this.monser;
-	}
-
-	public void setMonser(double monser) {
-		this.monser = monser;
 	}
 
 	public String getNomser() {

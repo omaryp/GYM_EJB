@@ -31,6 +31,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 	DataSource ds;
 	private final static Logger logger = Logger.getLogger(ModalidadPagoDAO.class.getName());
 	
+	
 	/**
 	 * Obtiene modalidad de pago
 	 * @param codMod numero del tipo <code>long</code>, código de modalidad
@@ -44,7 +45,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		String cadSql="";
 		ModalidadPago modalidad;
 		try {
-			cadSql="SELECT CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD,USUREG,FECREG,USUMOD,FECMOD TB_MODALIDAD_PAGO WHERE CODMOD = ?";
+			cadSql="SELECT CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD,USUREG,FECREG,USUMOD,FECMOD FROM tb_modalidad_pago WHERE CODMOD = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setLong(1,codMod);
@@ -96,7 +97,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="INSERT INTO TB_MODALIDAD_PAGO (CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD,USUREG,FECREG) VALUES(?,?,?,?,?,?,?)";
+			cadSql="INSERT INTO tb_modalidad_pago (CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD,USUREG,FECREG) VALUES(?,?,?,?,?,?,?)";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setLong(1, modal.getCodmod());
@@ -142,7 +143,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="UPDATE TB_MODALIDAD_PAGO SET NOMMOD = ?,ESTMOD = ?,DIAMOD = ?,DESMOD = ?,USUMOD = ?,FECMOD = ? WHERE CODMOD = ?";
+			cadSql="UPDATE tb_modalidad_pago SET NOMMOD = ?,ESTMOD = ?,DIAMOD = ?,DESMOD = ?,USUMOD = ?,FECMOD = ? WHERE CODMOD = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setString(1, modal.getNommod());
@@ -189,7 +190,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		String cadSql="";
 		long codigo = 0;
 		try {
-			cadSql="SELECT MAX(CODMOD) FROM TB_MODALIDAD_PAGO";
+			cadSql="SELECT MAX(CODMOD) FROM tb_modalidad_pago";
 			cn=ds.getConnection();
 			st=cn.createStatement();
 			rs=st.executeQuery(cadSql);
@@ -233,7 +234,6 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 	 * @param int[] limites para la paginación
 	 * @return Map contiene las coincidencias.
 	 */
-	@SuppressWarnings("resource")
 	@Override
 	public Map<String, Object> listaModalidades(String valBus,int[] limites){
 		Connection cn = null;
@@ -244,27 +244,13 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		List<ModalidadPago> modalidades = new ArrayList<ModalidadPago>();
 		Map<String,Object> map = new HashMap<String, Object>();
 		try {
-			//Se obtiene total de registros
-			cadSql="SELECT COUNT(*) FROM TB_MODALIDAD_PAGO WHERE NOMMOD like ? ";
+			total = cantidadRegistros(valBus,limites);
+			map.put("TOTAL", total);
+			//Se obtiene los clientes por páginas
+			cadSql="SELECT CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD FROM tb_modalidad_pago WHERE NOMMOD like ? ORDER BY CODMOD DESC LIMIT ?,? ";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
-			ps.setString(1, valBus+"%");
-			rs=ps.executeQuery();
-			if(rs.next())
-				total = rs.getInt(1);
-			else
-				total = 0;
-			map.put("TOTAL", total);
-			
-			if(ps!=null){
-				ps.close();
-				ps = null;
-			}
-			
-			//Se obtiene los clientes por páginas
-			cadSql="SELECT CODMOD,NOMMOD,ESTMOD,DIAMOD,DESMOD FROM TB_MODALIDAD_PAGO WHERE NOMMOD like ? ORDER BY CODMOD DESC LIMIT ?,? ";
-			ps=cn.prepareStatement(cadSql);
-			ps.setString(1, valBus+"%");
+			ps.setString(1,(valBus==null)?"%":valBus.trim()+"%");
 			ps.setInt(2, limites[0]);
 			ps.setInt(3, limites[1]);
 			rs=ps.executeQuery();
@@ -307,6 +293,52 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		return map;
 	}
 	
+	public int cantidadRegistros(String valBus,int[] limites){
+		Connection cn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String cadSql = "";
+		int total = 0;
+		try {
+			//Se obtiene total de registros
+			cadSql="SELECT COUNT(*) FROM tb_modalidad_pago WHERE NOMMOD like ? ";
+			cn=ds.getConnection();
+			ps=cn.prepareStatement(cadSql);
+			ps.setString(1,(valBus==null)?"%":valBus.trim()+"%");
+			rs=ps.executeQuery();
+			if(rs.next())
+				total = rs.getInt(1);
+			else
+				total = 0;
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, "Error en la ejecucion",e);
+			total = 0;
+		} finally{
+			try {
+                if (ps!= null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
+            }
+			try {
+                if (rs!= null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
+            }
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "No se pudo liberar el recurso");
+            }
+		}
+		return total;
+	}
+	
 	/**
 	 * Lista las modalidades activas
 	 * @return List lista con la modalidades activas.
@@ -320,7 +352,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		List<ModalidadPago> modalidades = new ArrayList<ModalidadPago>();
 		try {
 			//Se obtiene los clientes por páginas
-			cadSql="SELECT CODMOD,NOMMOD,DIAMOD,DESMOD FROM TB_MODALIDAD_PAGO WHERE ESTMOD = ? ";
+			cadSql="SELECT CODMOD,NOMMOD,DIAMOD,DESMOD FROM tb_modalidad_pago WHERE ESTMOD = ? ";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setInt(1,0);
@@ -374,7 +406,7 @@ public class ModalidadPagoDAO implements ModalidadPagoDAOLocal {
 		String cadSql="";
 		int res=0;
 		try {
-			cadSql="UPDATE TB_MODALIDAD_PAGO SET ESTMOD = ? WHERE CODMOD = ?";
+			cadSql="UPDATE tb_modalidad_pago SET ESTMOD = ? WHERE CODMOD = ?";
 			cn=ds.getConnection();
 			ps=cn.prepareStatement(cadSql);
 			ps.setInt(1,nvoEstado);
